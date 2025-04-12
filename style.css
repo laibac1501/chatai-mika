@@ -1,0 +1,37 @@
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f3f3f3;
+  margin: 0;
+  padding: 0;
+}
+#mika-container {
+  max-width: 600px;
+  margin: 30px auto;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+#chat-window {
+  padding: 15px;
+  height: 500px;
+  overflow-y: auto;
+}
+#input-area {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+#user-input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+}
+#input-area button {
+  padding: 10px 20px;
+  background: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
