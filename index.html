@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mika AI Chatbot</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .chatbox-container {
+      width: 300px;
+      height: 400px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chatbox-header {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .chatbox-body {
+      flex-grow: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .chatbox-footer {
+      display: flex;
+      padding: 10px;
+      background-color: #fff;
+    }
+
+    .chatbox-footer input {
+      flex-grow: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .chatbox-footer button {
+      padding: 10px;
+      margin-left: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .chatbox-footer button:hover {
+      background-color: #45a049;
+    }
+
+    .user, .bot {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .user {
+      background-color: #d1e7dd;
+      text-align: right;
+    }
+
+    .bot {
+      background-color: #f8d7da;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="chatbox-container">
+    <div class="chatbox-header">
+      <h3>Mika AI - Trợ lý thông minh</h3>
+    </div>
+    <div class="chatbox-body" id="chatbox-body">
+      <!-- Chat messages will appear here -->
+    </div>
+    <div class="chatbox-footer">
+      <input type="text" id="user-input" placeholder="Type a message...">
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const sendButton = document.getElementById('send-btn');
+    const userInput = document.getElementById('user-input');
+    const chatboxBody = document.getElementById('chatbox-body');
+
+    const apiKey = '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';
+
+    function sendMessageToAPI(message) {
+      const url = 'https://api.openrouter.ai/v1/chat/completions';
+
+      const data = {
+        messages: [{ role: 'user', content: message }],
+        model: 'gpt-4',
+        temperature: 0.7,
+      };
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then(response => response.json())
+      .then(data => {
+        const botReply = data.choices[0].message.content;
+        displayMessage(botReply, 'bot');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        displayMessage('Sorry, I couldn\'t understand that.', 'bot');
+      });
+    }
+
+    function displayMessage(message, sender) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add(sender);
+      messageElement.textContent = message;
+      chatboxBody.appendChild(messageElement);
+      chatboxBody.scrollTop = chatboxBody.scrollHeight;
+    }
+
+    sendButton.addEventListener('click', () => {
+      const userMessage = userInput.value;
+      if (userMessage.trim() !== '') {
+        displayMessage(userMessage, 'user');
+        userInput.value = '';
+        sendMessageToAPI(userMessage);
+      }
+    });
+
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendButton.click();
+      }
+    });
+  </script>
+</body>
+</html>
